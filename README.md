@@ -15,3 +15,4 @@ Given that I don't know what analysis you are interested in, it requires you to 
 - read and compare each commit's .csv with the previous one to detect the methods that were added, removed, modified. 
 - rank methods/types by their size over time.
 - produce another intermediate format that suits your needs.
+- you might pick up some ideas [here](http://michaelfeathers.typepad.com/michael_feathers_blog/2011/09/temporal-correlation-of-class-changes.html)
