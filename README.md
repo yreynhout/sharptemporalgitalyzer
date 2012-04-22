@@ -13,6 +13,6 @@ Spits out a .csv file under .\analysis for each commit containing all csharp met
 Given that I don't know what analysis you are interested in, it requires you to write another piece of code, one that reads and analyzes the .csv files. Things you could do:
 
 - read and compare each commit's .csv with the previous one to detect the methods that were added, removed, modified. 
-- rank methods/types by their size over time.
+- rank methods/types/projects/areas by their size over time.
 - produce another intermediate format that suits your needs.
-- you might pick up some ideas [here](http://michaelfeathers.typepad.com/michael_feathers_blog/2011/09/temporal-correlation-of-class-changes.html)
+- you might pick up some ideas [here](http://michaelfeathers.typepad.com/michael_feathers_blog/2011/09/temporal-correlation-of-class-changes.html).
