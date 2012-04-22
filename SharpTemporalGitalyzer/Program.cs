@@ -33,6 +33,7 @@ namespace Seabites.SharpTemporalGitalyzer {
           }
         }
       }
+      Console.WriteLine("Yeah, I'm done.");
       Console.ReadLine();
     }
 
