@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B6D5A2
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeOverTime", "ChangeOverTime\ChangeOverTime.csproj", "{DCA099AE-2F00-41C5-BA28-368C6868D489}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -19,6 +21,10 @@ Global
 		{ADA8B86A-A95C-49AD-8A85-C124E56D21CE}.Debug|x86.Build.0 = Debug|x86
 		{ADA8B86A-A95C-49AD-8A85-C124E56D21CE}.Release|x86.ActiveCfg = Release|x86
 		{ADA8B86A-A95C-49AD-8A85-C124E56D21CE}.Release|x86.Build.0 = Release|x86
+		{DCA099AE-2F00-41C5-BA28-368C6868D489}.Debug|x86.ActiveCfg = Debug|x86
+		{DCA099AE-2F00-41C5-BA28-368C6868D489}.Debug|x86.Build.0 = Debug|x86
+		{DCA099AE-2F00-41C5-BA28-368C6868D489}.Release|x86.ActiveCfg = Release|x86
+		{DCA099AE-2F00-41C5-BA28-368C6868D489}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

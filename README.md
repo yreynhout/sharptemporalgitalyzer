@@ -7,7 +7,7 @@ Usage:
 > stgalyzer &lt;path to your local git file repo&gt;
 
 Spits out a .csv file under .\analysis for each commit containing all csharp methods at that point in the working copy in the following format:
-> FullMethodName,MethodLength,MethodLineCount,FilePath,CommitHash,Committer,CommitDate
+> FullMethodName,MethodBodyLength,MethodBodyLineCount,MethodBodyHash,FilePath,CommitHash,Committer,CommitDate
 
 Right now, it's hard-coded to do this for the 'master' branch. There's a problem with the namespace of nested types. If you find it, send me a pull request.
 
