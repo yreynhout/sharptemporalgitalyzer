@@ -22,7 +22,7 @@ namespace Seabites.SharpTemporalGitalyzer {
 
     public static void WriteCsvHeader(TextWriter writer) {
       writer.WriteLine(
-        "FullMethodName,MethodLength,MethodLineCount,File,Hash,Committer,CommitDate");
+        "FullMethodName,MethodLength,MethodLineCount,FilePath,CommitHash,Committer,CommitDate");
     }
   }
 }
