@@ -1,7 +1,7 @@
 # CSharp Temporal Method Analyzer #
 ###### for git repositories ######
 
-Comes with a "build it yourself" policy.
+Comes with a "build it yourself" policy. It uses that NuGet thing to restore packages. Specify the path to git in the app.config, thanks.
 
 Usage:
 > stgalyzer &lt;path to your local git file repo&gt;
@@ -20,4 +20,4 @@ Given that I don't know what analysis you are interested in, it requires you to 
 - you might pick up some ideas [here](http://michaelfeathers.typepad.com/michael_feathers_blog/2011/09/temporal-correlation-of-class-changes.html).
 
 ### Disclaimer ###
-**Unstable! Only do this on a throw-away copy of your repo. If shit hits the fan, you're on your own. I'm not liable and have a good lawyer ;-) This is a sample, not a project/product. You're supposed to change the code, to make it do what you want.**
+**Unstable! Only do this on a throw-away copy of your repo. If shit hits the fan, you're on your own. I'm not liable and have a good lawyer ;-) This is a sample, not a project/product. You're supposed to change the code to make it do what you want. Duh!!**
