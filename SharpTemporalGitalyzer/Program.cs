@@ -10,7 +10,7 @@ namespace Seabites.SharpTemporalGitalyzer {
       var gitCommitIterator = new GitCommitIterator(gitPath);
       var gitWorkingCopyCheckout = new GitWorkingCopyCheckout(gitPath);
       var workingCopyPath = args[0];
-      var analysisOutputPath = Path.Combine(workingCopyPath, "analysis");
+      var analysisOutputPath = Path.Combine(Environment.CurrentDirectory, "analysis");
       EnsureCleanAnalysisOutput(analysisOutputPath);
       var parser = new CSharpParser();
       foreach (var commit in gitCommitIterator.GetCommits(workingCopyPath)) {
