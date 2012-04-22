@@ -44,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllMethods.cs" />
+    <Compile Include="ChangeType.cs" />
+    <Compile Include="CSharpMethod.cs" />
+    <Compile Include="CSharpMethodChange.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
