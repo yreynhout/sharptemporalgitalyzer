@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Threading;
 using ICSharpCode.NRefactory.CSharp;
 
 namespace Seabites.SharpTemporalGitalyzer {

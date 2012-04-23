@@ -9,7 +9,8 @@ namespace Seabites.ChangeOverTime {
       var allMethods = new AllMethods();
       File.Delete("changeovertime.csv");
       using (var csvWriter = new StreamWriter(File.OpenWrite("changeovertime.csv"))) {
-        csvWriter.WriteLine("CommitHash,Added,Modified,Removed");
+        ChangeStatisticsByDate.WriteCsvHeader(csvWriter);
+        var allChangeStatisticsByDate = new List<ChangeStatisticsByDate>();
         foreach (var file in
           Directory.EnumerateFiles(args[0], "*.csv", SearchOption.TopDirectoryOnly).
             OrderBy(path => Convert.ToInt32(Path.GetFileNameWithoutExtension(path)))) {
@@ -19,27 +20,37 @@ namespace Seabites.ChangeOverTime {
 
           var distinctMethodsInCommit = allMethodsInCommit.Distinct(new CSharpMethodFullMethodNameEqualityComparer()).ToList();
           if(distinctMethodsInCommit.Any()) {
+            var commitDate = distinctMethodsInCommit.First().CommitDate.Date;
             var changes = allMethods.WhatHasChanged(distinctMethodsInCommit);
-            var changeRatioInCommit = (from mapped in
-                                         (from change in changes
-                                          select new { change.ChangeType, Count = 1 })
-                                       group mapped by 1
-                                         into reduced
-                                         select new {
-                                           Added = reduced.Count(i => i.ChangeType == ChangeType.Added),
-                                           Removed = reduced.Count(i => i.ChangeType == ChangeType.Removed),
-                                           Modified = reduced.Count(i => i.ChangeType == ChangeType.Modified)
-                                         }).SingleOrDefault();
-            if(changeRatioInCommit != null) {
-              csvWriter.WriteLine(
-                "{0},{1},{2},{3}",
-                allMethodsInCommit.First(),
-                changeRatioInCommit.Added,
-                changeRatioInCommit.Modified,
-                changeRatioInCommit.Removed);
+            var changeStatisticsByDate = (from mapped in
+                                      (from change in changes
+                                       select new {change.ChangeType, Count = 1})
+                                    group mapped by 1
+                                    into reduced
+                                    select new ChangeStatisticsByDate
+                                      (commitDate,
+                                       reduced.Count(i => i.ChangeType == ChangeType.Added),
+                                       reduced.Count(i => i.ChangeType == ChangeType.Removed),
+                                       reduced.Count(i => i.ChangeType == ChangeType.Modified)
+                                      )).SingleOrDefault();
+            if(changeStatisticsByDate != null) {
+              allChangeStatisticsByDate.Add(changeStatisticsByDate);
             }
             allMethods.AcceptChanges(distinctMethodsInCommit);
           }
+        }
+
+        var reducedChangeStatisticsByDate =
+          from changeStatisticsByDate in allChangeStatisticsByDate
+          group changeStatisticsByDate by changeStatisticsByDate.Date
+          into reduced
+          select
+            new ChangeStatisticsByDate(reduced.Key,
+                                       reduced.Sum(i => i.Added),
+                                       reduced.Sum(i => i.Modified),
+                                       reduced.Sum(i => i.Removed));
+        foreach (var changeStatisticsByDate in reducedChangeStatisticsByDate) {
+          changeStatisticsByDate.WriteAsCsv(csvWriter);
         }
       }
       Console.WriteLine("Yeah, I'm done.");

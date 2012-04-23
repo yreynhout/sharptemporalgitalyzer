@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Xml;
 
 namespace Seabites.ChangeOverTime {
@@ -10,9 +11,9 @@ namespace Seabites.ChangeOverTime {
     readonly string _file;
     readonly string _commitHash;
     readonly string _committer;
-    readonly DateTime _commitDate;
+    readonly DateTimeOffset _commitDate;
 
-    CSharpMethod(string fullmethodname, int length, int linecount, int hash, string file, string commitHash, string committer, DateTime commitDate) {
+    CSharpMethod(string fullmethodname, int length, int linecount, int hash, string file, string commitHash, string committer, DateTimeOffset commitDate) {
       if (fullmethodname == null) throw new ArgumentNullException("fullmethodname");
       _fullmethodname = fullmethodname;
       _length = length;
@@ -24,7 +25,7 @@ namespace Seabites.ChangeOverTime {
       _commitDate = commitDate;
     }
 
-    public DateTime CommitDate {
+    public DateTimeOffset CommitDate {
       get { return _commitDate; }
     }
 
@@ -50,7 +51,7 @@ namespace Seabites.ChangeOverTime {
         data[4], 
         data[5], 
         data[6],
-        XmlConvert.ToDateTime(data[7], XmlDateTimeSerializationMode.Utc));
+        DateTimeOffset.ParseExact(data[7], "yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture));
     }
 
     public bool BodyHashEquals(CSharpMethod next) {

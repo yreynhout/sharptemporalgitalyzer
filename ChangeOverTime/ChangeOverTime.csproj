@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllMethods.cs" />
+    <Compile Include="ChangeStatisticsByDate.cs" />
     <Compile Include="ChangeType.cs" />
     <Compile Include="CSharpMethod.cs" />
     <Compile Include="CSharpMethodChange.cs" />
