@@ -7,34 +7,51 @@ namespace Seabites.ChangeOverTime {
   class Program {
     static void Main(string[] args) {
       var allMethods = new AllMethods();
+      File.Delete("changeovertime.csv");
       using (var csvWriter = new StreamWriter(File.OpenWrite("changeovertime.csv"))) {
+        csvWriter.WriteLine("CommitHash,Added,Modified,Removed");
         foreach (var file in
           Directory.EnumerateFiles(args[0], "*.csv", SearchOption.TopDirectoryOnly).
             OrderBy(path => Convert.ToInt32(Path.GetFileNameWithoutExtension(path)))) {
           var allMethodsInCommit = ReadMethodsInCommit(file).ToList();
-          if (allMethodsInCommit.Any()) {
-            var changes = allMethods.WhatHasChanged(allMethodsInCommit);
+          var list = new HashSet<string>();
+          var duplicateHeaderWritten = false;
+          foreach(var method in allMethodsInCommit) {
+            if(!list.Add(method.FullMethodName)) {
+              if(!duplicateHeaderWritten) {
+                Console.WriteLine("Found a method name more than once in commit '{0}'.", method.CommitHash);
+                duplicateHeaderWritten = true;
+              }
+              Console.WriteLine("\t{0}", method.FullMethodName);
+            }
+          }
+          var distinctMethodsInCommit = allMethodsInCommit.Distinct(new CSharpMethodFullMethodNameEqualityComparer()).ToList();
+          if(distinctMethodsInCommit.Any()) {
+            var changes = allMethods.WhatHasChanged(distinctMethodsInCommit);
             var changeRatioInCommit = (from mapped in
                                          (from change in changes
-                                          select new { change.Method.CommitHash, change.ChangeType, Count = 1 })
-                                       group mapped by mapped.CommitHash
+                                          select new { change.ChangeType, Count = 1 })
+                                       group mapped by 1
                                          into reduced
                                          select new {
-                                           CommitHash = reduced.Key,
                                            Added = reduced.Count(i => i.ChangeType == ChangeType.Added),
                                            Removed = reduced.Count(i => i.ChangeType == ChangeType.Removed),
                                            Modified = reduced.Count(i => i.ChangeType == ChangeType.Modified)
-                                         }).Single();
-            csvWriter.WriteLine(
-              "{0},{1},{2},{3}",
-              changeRatioInCommit.CommitHash,
-              changeRatioInCommit.Added,
-              changeRatioInCommit.Modified,
-              changeRatioInCommit.Removed);
-            allMethods.AcceptChanges(allMethodsInCommit);
+                                         }).SingleOrDefault();
+            if(changeRatioInCommit != null) {
+              csvWriter.WriteLine(
+                "{0},{1},{2},{3}",
+                allMethodsInCommit.First().CommitHash,
+                changeRatioInCommit.Added,
+                changeRatioInCommit.Modified,
+                changeRatioInCommit.Removed);
+            }
+            allMethods.AcceptChanges(distinctMethodsInCommit);
           }
         }
       }
+      Console.WriteLine("Yeah, I'm done.");
+      Console.ReadLine();
     }
 
     static IEnumerable<CSharpMethod> ReadMethodsInCommit(string path) {

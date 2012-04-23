@@ -16,13 +16,13 @@ namespace Seabites.SharpTemporalGitalyzer {
 
     public void WriteAsCsv(TextWriter writer) {
       writer.WriteLine(
-        "{0},{1},{2},{3},{4},{5},{6},{7}",
+        "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}",
         _fullmethodname, _bodyStatistics.Length, _bodyStatistics.LineCount, _bodyStatistics.Hash, _file, _commit.Hash, _commit.Committer, _commit.CommitDate);
     }
 
     public static void WriteCsvHeader(TextWriter writer) {
       writer.WriteLine(
-        "FullMethodName,MethodBodyLength,MethodBodyLineCount,MethodBodyHash,FilePath,CommitHash,Committer,CommitDate");
+        "FullMethodName\tMethodBodyLength\tMethodBodyLineCount\tMethodBodyHash\tFilePath\tCommitHash\tCommitter\tCommitDate");
     }
   }
 }

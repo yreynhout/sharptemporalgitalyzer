@@ -33,7 +33,7 @@ namespace Seabites.ChangeOverTime {
 
     public void AcceptChanges(IEnumerable<CSharpMethod> methods) {
       var indexOfNext = methods.ToDictionary(method => method.FullMethodName);
-      foreach(var method in _indexOfCurrent.Values.Union(indexOfNext.Values)) {
+      foreach(var method in _indexOfCurrent.Values.ToArray().Union(indexOfNext.Values)) {
         CSharpMethod next;
         CSharpMethod current;
         if(indexOfNext.TryGetValue(method.FullMethodName, out next) && _indexOfCurrent.TryGetValue(method.FullMethodName, out current)) {
