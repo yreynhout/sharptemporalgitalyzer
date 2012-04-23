@@ -41,7 +41,7 @@ namespace Seabites.ChangeOverTime {
 
     public void WriteAsCsv(TextWriter csvWriter) {
       csvWriter.WriteLine(
-        "{0},{1},{2},{3}",
+        "{0}\t{1}\t{2}\t{3}",
         _date.Date.ToString("yyyy-MM-dd"),
         _added,
         _modified,
@@ -49,7 +49,7 @@ namespace Seabites.ChangeOverTime {
     }
 
     public static void WriteCsvHeader(TextWriter csvWriter) {
-      csvWriter.WriteLine("CommitUtcDate,Added,Modified,Removed");
+      csvWriter.WriteLine("CommitUtcDate\tAdded\tModified\tRemoved");
     }
   }
 }
