@@ -6,7 +6,7 @@ using ICSharpCode.NRefactory.CSharp;
 
 namespace Seabites.SharpTemporalGitalyzer {
   public static class ExtensionOfMethodDeclaration {
-    public static CSharpMethodBodyStatistics GetBodyLineCountAndLength(this MethodDeclaration declaration) {
+    public static CSharpMethodBodyStatistics GetBodyStatistics(this MethodDeclaration declaration) {
       using (var writer = new StringWriter()) {
         var visitor = new CSharpOutputVisitor(writer, FormattingOptionsFactory.CreateAllman());
         declaration.AcceptVisitor(visitor);

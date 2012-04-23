@@ -5,7 +5,7 @@
     readonly string _committer;
     readonly string _commitDate;
 
-    public Commit(int index, string hash, string committer, string commitDate) {
+    public Commit(int index, string hash, string commitDate, string committer) {
       _index = index;
       _hash = hash;
       _committer = committer;

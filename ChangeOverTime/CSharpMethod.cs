@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Xml;
 
 namespace Seabites.ChangeOverTime {
   public class CSharpMethod {
     readonly string _fullmethodname;
-    readonly string _length;
-    readonly string _linecount;
-    readonly string _hash;
+    readonly int _length;
+    readonly int _linecount;
+    readonly int _hash;
     readonly string _file;
     readonly string _commitHash;
     readonly string _committer;
-    readonly string _commitDate;
+    readonly DateTime _commitDate;
 
-    CSharpMethod(string fullmethodname, string length, string linecount, string hash, string file, string commitHash, string committer, string commitDate) {
+    CSharpMethod(string fullmethodname, int length, int linecount, int hash, string file, string commitHash, string committer, DateTime commitDate) {
       if (fullmethodname == null) throw new ArgumentNullException("fullmethodname");
       _fullmethodname = fullmethodname;
       _length = length;
@@ -21,6 +22,10 @@ namespace Seabites.ChangeOverTime {
       _commitHash = commitHash;
       _committer = committer;
       _commitDate = commitDate;
+    }
+
+    public DateTime CommitDate {
+      get { return _commitDate; }
     }
 
     public string CommitHash {
@@ -37,7 +42,15 @@ namespace Seabites.ChangeOverTime {
 
     public static CSharpMethod ReadAsCsv(string csvEntry) {
       var data = csvEntry.Split('\t');
-      return new CSharpMethod(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+      return new CSharpMethod(
+        data[0], 
+        Convert.ToInt32(data[1]), 
+        Convert.ToInt32(data[2]),
+        Convert.ToInt32(data[3]), 
+        data[4], 
+        data[5], 
+        data[6],
+        XmlConvert.ToDateTime(data[7], XmlDateTimeSerializationMode.Utc));
     }
 
     public bool BodyHashEquals(CSharpMethod next) {

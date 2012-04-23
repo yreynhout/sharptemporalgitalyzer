@@ -33,7 +33,7 @@ namespace Seabites.ChangeOverTime {
             if(changeRatioInCommit != null) {
               csvWriter.WriteLine(
                 "{0},{1},{2},{3}",
-                allMethodsInCommit.First().CommitHash,
+                allMethodsInCommit.First(),
                 changeRatioInCommit.Added,
                 changeRatioInCommit.Modified,
                 changeRatioInCommit.Removed);
