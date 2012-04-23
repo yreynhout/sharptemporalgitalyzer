@@ -25,7 +25,7 @@ namespace Seabites.SharpTemporalGitalyzer {
         foreach(var type in types) {
           foreach(var method in type.Members.OfType<MethodDeclaration>()) {
             yield return new CSharpMethod(
-              string.Format("{0}.{1}.{2}", type.GetNamespace(), type.Name, method.Name),
+              method.GetFullName(),
               method.GetBodyLineCountAndLength(),
               _file,
               _commit);

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ICSharpCode.NRefactory.CSharp;
 
 namespace Seabites.SharpTemporalGitalyzer {
@@ -14,6 +16,39 @@ namespace Seabites.SharpTemporalGitalyzer {
           bodyAsString.Length,
           bodyAsString.GetHashCode());
       }
+    }
+
+    public static string GetFullName(this MethodDeclaration declaration) {
+      var name = GetNameWithTypeParameters(declaration);
+      var parent = declaration.Parent;
+      if(parent != null && parent is TypeDeclaration) {
+        name = string.Format("{0}.{1}", GetNameWithTypeParameters((TypeDeclaration)parent), name);
+        parent = parent.Parent;
+        while (parent != null && parent is TypeDeclaration) {
+          name = string.Format("{0}+{1}", GetNameWithTypeParameters((TypeDeclaration)parent), name);
+          parent = parent.Parent;
+        }
+      }
+      if(parent != null && parent is NamespaceDeclaration) {
+        return string.Format("{0}.{1}", ((NamespaceDeclaration)parent).FullName, name);
+      }
+      return name;
+    }
+
+    static string GetNameWithTypeParameters(TypeDeclaration declaration) {
+      return GetNameWithTypeParameters(declaration.Name, declaration.TypeParameters);
+    }
+
+    static string GetNameWithTypeParameters(MethodDeclaration declaration) {
+      return GetNameWithTypeParameters(declaration.Name, declaration.TypeParameters);
+    }
+
+    static string GetNameWithTypeParameters(string name, IEnumerable<TypeParameterDeclaration> typeParameters) {
+      var parameters = String.Join(",", typeParameters.Select(typeParameter => typeParameter.Name));
+      if(!string.IsNullOrEmpty(parameters)) {
+        return name + "<" + parameters + ">";
+      }
+      return name;
     }
   }
 }

@@ -3,33 +3,53 @@ using System.Linq;
 
 namespace Seabites.ChangeOverTime {
   public class AllMethods {
-    readonly List<CSharpMethod> _methods;
+    readonly Dictionary<string, CSharpMethod> _indexOfCurrent;
 
     public AllMethods() {
-      _methods = new List<CSharpMethod>();
+      _indexOfCurrent = new Dictionary<string, CSharpMethod>();
     }
 
     public IEnumerable<CSharpMethodChange> WhatHasChanged(IEnumerable<CSharpMethod> methods) {
-      foreach(var removed in _methods.Except(methods)) {
-        yield return new CSharpMethodChange(ChangeType.Removed, removed);
-      }
-      foreach(var added in methods.Except(_methods)) {
-        yield return new CSharpMethodChange(ChangeType.Removed, added);
-      }
-      foreach(var unmodified in methods.Intersect(_methods)) {
-        var current = _methods.First(method => method.Equals(unmodified));
-        var next = methods.First(method => method.Equals(unmodified));
-        if(!current.BodyHashEquals(next)) {
-          yield return new CSharpMethodChange(ChangeType.Modified, next);
+      var indexOfNext = methods.ToDictionary(method => method.FullMethodName);
+
+      foreach(var method in _indexOfCurrent.Values.Union(indexOfNext.Values)) {
+        CSharpMethod next;
+        CSharpMethod current;
+        if(indexOfNext.TryGetValue(method.FullMethodName, out next) && _indexOfCurrent.TryGetValue(method.FullMethodName, out current)) {
+          //Modified?
+          if(!current.BodyHashEquals(next)) {
+            //Modified
+            yield return new CSharpMethodChange(ChangeType.Modified, next);
+          }
+        } else if(indexOfNext.ContainsKey(method.FullMethodName)) {
+          //Added
+          yield return new CSharpMethodChange(ChangeType.Added, method);
+        } else if(_indexOfCurrent.ContainsKey(method.FullMethodName)) {
+          //Removed
+          yield return new CSharpMethodChange(ChangeType.Removed, method);
         }
       }
     }
 
     public void AcceptChanges(IEnumerable<CSharpMethod> methods) {
-      foreach (var method in methods.Where(method => _methods.Contains(method))) {
-        _methods.Remove(method);
+      var indexOfNext = methods.ToDictionary(method => method.FullMethodName);
+      foreach(var method in _indexOfCurrent.Values.Union(indexOfNext.Values)) {
+        CSharpMethod next;
+        CSharpMethod current;
+        if(indexOfNext.TryGetValue(method.FullMethodName, out next) && _indexOfCurrent.TryGetValue(method.FullMethodName, out current)) {
+          //Modified?
+          if(!current.BodyHashEquals(next)) {
+            //Modified
+            _indexOfCurrent[method.FullMethodName] = next;
+          }
+        } else if(indexOfNext.ContainsKey(method.FullMethodName)) {
+          //Added
+          _indexOfCurrent.Add(method.FullMethodName, method);
+        } else if(_indexOfCurrent.ContainsKey(method.FullMethodName)) {
+          //Removed
+          _indexOfCurrent.Remove(method.FullMethodName);
+        }
       }
-      _methods.AddRange(methods);
     }
   }
 }

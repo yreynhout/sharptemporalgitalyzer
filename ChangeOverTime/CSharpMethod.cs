@@ -29,26 +29,15 @@ namespace Seabites.ChangeOverTime {
       }
     }
 
-    public static CSharpMethod Parse(string csvEntry) {
+    public string FullMethodName {
+      get {
+        return _fullmethodname;
+      }
+    }
+
+    public static CSharpMethod ReadAsCsv(string csvEntry) {
       var data = csvEntry.Split(',');
       return new CSharpMethod(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
-    }
-
-    public bool Equals(CSharpMethod other) {
-      if (ReferenceEquals(null, other)) return false;
-      if (ReferenceEquals(this, other)) return true;
-      return Equals(other._fullmethodname, _fullmethodname);
-    }
-
-    public override bool Equals(object obj) {
-      if (ReferenceEquals(null, obj)) return false;
-      if (ReferenceEquals(this, obj)) return true;
-      if (obj.GetType() != typeof (CSharpMethod)) return false;
-      return Equals((CSharpMethod) obj);
-    }
-
-    public override int GetHashCode() {
-      return _fullmethodname.GetHashCode();
     }
 
     public bool BodyHashEquals(CSharpMethod next) {

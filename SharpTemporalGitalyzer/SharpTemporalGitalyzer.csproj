@@ -71,7 +71,6 @@
     <Compile Include="CSharpFile.cs" />
     <Compile Include="CSharpMethod.cs" />
     <Compile Include="ExtensionOfMethodDeclaration.cs" />
-    <Compile Include="ExtensionOfTypeDeclaration.cs" />
     <Compile Include="GitCommitIterator.cs" />
     <Compile Include="GitWorkingCopyCheckout.cs" />
     <Compile Include="Program.cs" />

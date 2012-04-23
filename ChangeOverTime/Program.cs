@@ -21,11 +21,9 @@ namespace Seabites.ChangeOverTime {
                                          into reduced
                                          select new {
                                            CommitHash = reduced.Key,
-                                           Added = reduced.Where(i => i.ChangeType == ChangeType.Added).Count(),
-                                           Removed =
-                                reduced.Where(i => i.ChangeType == ChangeType.Removed).Count(),
-                                           Modified =
-                                reduced.Where(i => i.ChangeType == ChangeType.Modified).Count()
+                                           Added = reduced.Count(i => i.ChangeType == ChangeType.Added),
+                                           Removed = reduced.Count(i => i.ChangeType == ChangeType.Removed),
+                                           Modified = reduced.Count(i => i.ChangeType == ChangeType.Modified)
                                          }).Single();
             csvWriter.WriteLine(
               "{0},{1},{2},{3}",
@@ -45,7 +43,7 @@ namespace Seabites.ChangeOverTime {
           csvReader.ReadLine();
           string csvEntry;
           while ((csvEntry = csvReader.ReadLine()) != null) {
-            yield return CSharpMethod.Parse(csvEntry);
+            yield return CSharpMethod.ReadAsCsv(csvEntry);
           }
         }
       }
