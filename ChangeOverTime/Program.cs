@@ -14,17 +14,9 @@ namespace Seabites.ChangeOverTime {
           Directory.EnumerateFiles(args[0], "*.csv", SearchOption.TopDirectoryOnly).
             OrderBy(path => Convert.ToInt32(Path.GetFileNameWithoutExtension(path)))) {
           var allMethodsInCommit = ReadMethodsInCommit(file).ToList();
-          var list = new HashSet<string>();
-          var duplicateHeaderWritten = false;
-          foreach(var method in allMethodsInCommit) {
-            if(!list.Add(method.FullMethodName)) {
-              if(!duplicateHeaderWritten) {
-                Console.WriteLine("Found a method name more than once in commit '{0}'.", method.CommitHash);
-                duplicateHeaderWritten = true;
-              }
-              Console.WriteLine("\t{0}", method.FullMethodName);
-            }
-          }
+          
+          ReportAnyDuplicateMethods(allMethodsInCommit);
+
           var distinctMethodsInCommit = allMethodsInCommit.Distinct(new CSharpMethodFullMethodNameEqualityComparer()).ToList();
           if(distinctMethodsInCommit.Any()) {
             var changes = allMethods.WhatHasChanged(distinctMethodsInCommit);
@@ -52,6 +44,18 @@ namespace Seabites.ChangeOverTime {
       }
       Console.WriteLine("Yeah, I'm done.");
       Console.ReadLine();
+    }
+
+    static void ReportAnyDuplicateMethods(IEnumerable<CSharpMethod> allMethodsInCommit) {
+      var list = new HashSet<string>();
+      var duplicateHeaderWritten = false;
+      foreach (var method in allMethodsInCommit.Where(method => !list.Add(method.FullMethodName))) {
+        if (!duplicateHeaderWritten) {
+          Console.WriteLine("Found a method name more than once in commit '{0}'.", method.CommitHash);
+          duplicateHeaderWritten = true;
+        }
+        Console.WriteLine("\t{0}", method.FullMethodName);
+      }
     }
 
     static IEnumerable<CSharpMethod> ReadMethodsInCommit(string path) {

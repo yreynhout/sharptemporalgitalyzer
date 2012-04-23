@@ -19,7 +19,7 @@ namespace Seabites.SharpTemporalGitalyzer {
     }
 
     public static string GetFullName(this MethodDeclaration declaration) {
-      var name = GetNameWithTypeParameters(declaration);
+      var name = GetPartialMethodSignature(declaration);
       var parent = declaration.Parent;
       if(parent != null && parent is TypeDeclaration) {
         name = string.Format("{0}.{1}", GetNameWithTypeParameters((TypeDeclaration)parent), name);
@@ -41,6 +41,23 @@ namespace Seabites.SharpTemporalGitalyzer {
 
     static string GetNameWithTypeParameters(MethodDeclaration declaration) {
       return GetNameWithTypeParameters(declaration.Name, declaration.TypeParameters);
+    }
+
+    static string GetPartialMethodSignature(MethodDeclaration declaration) {
+      if(declaration.Parameters.Count > 0) {
+        using (var writer = new StringWriter()) {
+          var visitor = new CSharpOutputVisitor(writer, FormattingOptionsFactory.CreateAllman());
+          var parameterIndex = 0;
+          foreach (var parameter in declaration.Parameters) {
+            if (parameterIndex > 0)
+              writer.Write(",");
+            parameter.AcceptVisitor(visitor);
+            parameterIndex++;
+          }
+          return string.Format("{0}({1})", GetNameWithTypeParameters(declaration), writer);
+        }
+      }
+      return string.Format("{0}()", GetNameWithTypeParameters(declaration));
     }
 
     static string GetNameWithTypeParameters(string name, IEnumerable<TypeParameterDeclaration> typeParameters) {
